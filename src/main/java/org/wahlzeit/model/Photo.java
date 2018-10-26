@@ -123,6 +123,12 @@ public class Photo extends DataObject {
 	protected String ending = "jpg";
 	
 	/**
+	 * Photo maybe have an Location
+	 */
+	
+	public Location location;
+	
+	/**
 	 *
 	 */
 	//TODO: change it to a single long
