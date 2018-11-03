@@ -20,6 +20,9 @@
 
 package org.wahlzeit.services;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
 import junit.framework.TestCase;
 
 /**
@@ -65,6 +68,28 @@ public class EmailAddressTest extends TestCase {
 	public void testEmptyEmailAddress() {
 		assertFalse(EmailAddress.EMPTY.isValid());
 	}
+	
+	/**
+	 * tests method asInternetAdress()
+	 * @exception throws AddressException when testInternetAddress initialization failed
+	 */
+	public void testAsInternetAdress() throws AddressException {
+			InternetAddress testInternetAddress = new InternetAddress("yolo@whatsup.com");
+			assertNull(EmailAddress.EMPTY.asInternetAddress());
+			assertEquals(testInternetAddress, EmailAddress.getFromString("yolo@whatsup.com").asInternetAddress());
+	}
 
+	/**
+	 * tests method isEqual()
+	 */
+	public void testIsEqual() {
+		EmailAddress testEmailAddress = EmailAddress.getFromString("yolo@whatsup.com");
+		EmailAddress testEqualEmailAddress = EmailAddress.getFromString("yolo@whatsup.com");
+		EmailAddress testDifferentEmailAddress = EmailAddress.getFromString("lookovic@whatsup.com");
+		
+		assertTrue(testEmailAddress.isEqual(testEqualEmailAddress));
+		assertFalse(testEmailAddress.isEqual(testDifferentEmailAddress));
+		assertFalse(testEmailAddress.isEqual(null));
+	}
 }
 

@@ -56,12 +56,15 @@ dependencies {
     testCompile 'com.google.appengine:appengine-tools-sdk:+'
     testCompile 'junit:junit:4.+'
     testCompile 'org.mockito:mockito-core:2.22.0'
+    
+    testCompile 'org.junit.jupiter:junit-jupiter-api:5.2.0'
 }
 
 test {
-    filter {
-        includeTestsMatching "org.wahlzeit.*"
+	filter {
+        includeTestsMatching "AllTests*"
     }
+       
     testLogging {
             events "passed", "skipped", "failed"
 
