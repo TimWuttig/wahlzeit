@@ -1,3 +1,13 @@
+/**
+ * BikePhotoManager
+ * 
+ * 1.0
+ * 
+ * 09.11.2018
+ * 
+ * Copyright (c) by Tim Wuttig
+ */
+
 package org.wahlzeit.model;
 
 import java.util.logging.Logger;

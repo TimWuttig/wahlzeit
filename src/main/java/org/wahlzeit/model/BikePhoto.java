@@ -1,11 +1,27 @@
+/**
+ * BikePhoto
+ * 
+ * 1.0
+ * 
+ * 09.11.2018
+ * 
+ * Copyright (c) by Tim Wuttig
+ */
+
 package org.wahlzeit.model;
 
 public class BikePhoto extends Photo{
 	
 	/*
-	 * Attributes for my domain
+	 * Default values for domain attributes	
 	 */
+	private static final String DEFAULT_MODEL = "Pretty cool Motorcycle";
+	private static final String DEFAULT_BRANDE = "Bambusbikes Inc.";
+	private static final int DEFAULT_HORSEPOWER = 199;
 	
+	/*
+	 * Attributes for my domain
+	 */	
 	private String model;
 	private String brande;
 	private int horsepower;
@@ -18,6 +34,8 @@ public class BikePhoto extends Photo{
 	public BikePhoto () {
 		id = PhotoId.getNextId();
 		incWriteCount();
+		
+		setAttr(DEFAULT_MODEL,DEFAULT_BRANDE,DEFAULT_HORSEPOWER);
 	}
 	
 	/**
@@ -27,6 +45,36 @@ public class BikePhoto extends Photo{
 		id = myId;
 
 		incWriteCount();
+		
+		setAttr(DEFAULT_MODEL,DEFAULT_BRANDE,DEFAULT_HORSEPOWER);
+	}
+	
+	/**
+	 * @methodtype constructor
+	 */
+	public BikePhoto(String model, String brande, int horsepower) {
+		BikePhoto createdBikePhoto = new BikePhoto();
+		
+		setAttr(model,brande,horsepower);
+	}
+	
+	/**
+	 * @methodtype constructor
+	 */
+	public BikePhoto(PhotoId myId, String model, String brande, int horsepower) {
+		BikePhoto createdBikePhoto = new BikePhoto(myId);
+		
+		setAttr(model,brande,horsepower);
+	}
+	
+	/**
+	 * @methodtype initializer
+	 * @methodproperties composed
+	 */
+	public void setAttr(String model, String brande, int horsepower) {
+		setModel(model);
+		setBrande(brande);
+		setHorsepower(horsepower);
 	}
 	
 	/**
