@@ -29,6 +29,7 @@ public class CartesianCoordinateTest {
 	private CartesianCoordinate equalMixedCartesianCoordinate;
 	private SphericCoordinate equalPositiveSphericCoordinate;
 	private SphericCoordinate equalMixedSphericCoordinate;
+	private double delta = 0.000001;
 
 	/**
 	 * Initializes the different Coordinates
@@ -61,15 +62,15 @@ public class CartesianCoordinateTest {
 		assertEquals(sameCoordinateErg, positiveCartesianCoordinate.getCartesianDistance(positiveCartesianCoordinate),0);
 		assertEquals(sameCoordinateErg, negativeCartesianCoordinate.getCartesianDistance(negativeCartesianCoordinate),0);
 		assertEquals(sameCoordinateErg, mixedCartesianCoordinate.getCartesianDistance(mixedCartesianCoordinate),0);
-		assertEquals(positiveAndNegativeErg, positiveCartesianCoordinate.getCartesianDistance(negativeCartesianCoordinate),0.000000001);
-		assertEquals(positiveAndMixedErg, positiveCartesianCoordinate.getCartesianDistance(mixedCartesianCoordinate),0.000000001);
-		assertEquals(negativeAndMixedErg, negativeCartesianCoordinate.getCartesianDistance(mixedCartesianCoordinate),0.000000001);
+		assertEquals(positiveAndNegativeErg, positiveCartesianCoordinate.getCartesianDistance(negativeCartesianCoordinate), delta);
+		assertEquals(positiveAndMixedErg, positiveCartesianCoordinate.getCartesianDistance(mixedCartesianCoordinate), delta);
+		assertEquals(negativeAndMixedErg, negativeCartesianCoordinate.getCartesianDistance(mixedCartesianCoordinate), delta);
 		assertEquals(sameCoordinateErg, maxValueCartesianCoordinate.getCartesianDistance(maxValueCartesianCoordinate), 0);
 		assertEquals(sameCoordinateErg, minValueCartesianCoordinate.getCartesianDistance(minValueCartesianCoordinate), 0);
 	}
 	
 	@Test(expected = ArithmeticException.class)
-	public void testGetCartesianDistanceOnOverflow() {
+	public void testGetCartesianDistanceOfOverflow() {
 		minValueCartesianCoordinate.getCartesianDistance(maxValueCartesianCoordinate);
 	}
 	
@@ -96,13 +97,17 @@ public class CartesianCoordinateTest {
 		//test special case with null
 		assertFalse(positiveCartesianCoordinate.isEqual(null));
 	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testGetCartesianDistanceOfException() {
+		positiveCartesianCoordinate.getCartesianDistance(null);
+	}
 		
 	/**
 	 * Test method asSphericCoordinate
 	 */
 	@Test
 	public void testAsSphericCoordinate() {
-		double delta = 0.000000001;
 		SphericCoordinate testPositiveCoordinate = positiveCartesianCoordinate.asSphericCoordinate();
 		SphericCoordinate testMixedCoordinate = mixedCartesianCoordinate.asSphericCoordinate();
 		
@@ -114,6 +119,24 @@ public class CartesianCoordinateTest {
 		assertEquals(equalMixedSphericCoordinate.getRadius(), testMixedCoordinate.getRadius(), delta);
 		assertEquals(equalMixedSphericCoordinate.getTheta(), testMixedCoordinate.getTheta(), delta);
 		assertEquals(equalMixedSphericCoordinate.getPhi(), testMixedCoordinate.getPhi(), delta);	
+	}
+	
+	/**
+	 * tests method getCentralAngle
+	 */
+	@Test
+	public void testGetCentralAngle() {
+		double sameCoordinates = 0;
+		double positiveAndNegativeErg = 2.4805989747;
+		double positiveAndMixedErg = 1.6512142959;
+		double negativeAndMixed = 1.3251231052;
+		
+		assertEquals(sameCoordinates,positiveCartesianCoordinate.getCentralAngle(positiveCartesianCoordinate),delta);
+		assertEquals(sameCoordinates,negativeCartesianCoordinate.getCentralAngle(negativeCartesianCoordinate),delta);
+		assertEquals(sameCoordinates,mixedCartesianCoordinate.getCentralAngle(mixedCartesianCoordinate),delta);
+		assertEquals(positiveAndNegativeErg, positiveCartesianCoordinate.getCentralAngle(negativeCartesianCoordinate),delta);
+		assertEquals(positiveAndMixedErg, positiveCartesianCoordinate.getCentralAngle(mixedCartesianCoordinate),delta);
+		assertEquals(negativeAndMixed, negativeCartesianCoordinate.getCentralAngle(mixedCartesianCoordinate),delta);
 	}
 	
 	/**
