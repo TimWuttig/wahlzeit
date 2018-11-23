@@ -110,6 +110,8 @@ public class CartesianCoordinateTest {
 	public void testAsSphericCoordinate() {
 		SphericCoordinate testPositiveCoordinate = positiveCartesianCoordinate.asSphericCoordinate();
 		SphericCoordinate testMixedCoordinate = mixedCartesianCoordinate.asSphericCoordinate();
+		CartesianCoordinate originalCoordinate = new CartesianCoordinate(0, 0, 0);
+		SphericCoordinate testOriginalCoordinate = originalCoordinate.asSphericCoordinate();
 		
 		//Test with positiveCartesianCoordinate
 		assertEquals(equalPositiveSphericCoordinate.getRadius(), testPositiveCoordinate.getRadius(), delta);
@@ -118,7 +120,10 @@ public class CartesianCoordinateTest {
 		//Test with positiveCartesianCoordinate
 		assertEquals(equalMixedSphericCoordinate.getRadius(), testMixedCoordinate.getRadius(), delta);
 		assertEquals(equalMixedSphericCoordinate.getTheta(), testMixedCoordinate.getTheta(), delta);
-		assertEquals(equalMixedSphericCoordinate.getPhi(), testMixedCoordinate.getPhi(), delta);	
+		assertEquals(equalMixedSphericCoordinate.getPhi(), testMixedCoordinate.getPhi(), delta);
+		
+		//Test with originalCoordinate
+		assertEquals(0.0, testOriginalCoordinate.getRadius(), 0);
 	}
 	
 	/**

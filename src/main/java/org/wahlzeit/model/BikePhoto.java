@@ -10,6 +10,9 @@
 
 package org.wahlzeit.model;
 
+import com.googlecode.objectify.annotation.Subclass;
+
+@Subclass
 public class BikePhoto extends Photo{
 	
 	/*

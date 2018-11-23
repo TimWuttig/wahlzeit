@@ -11,7 +11,7 @@
 package org.wahlzeit.model;
 
 
-public class CartesianCoordinate implements Coordinate{
+public class CartesianCoordinate extends AbstractCoordinate{
 	/**
 	 * variables for the Cartesian coordinates
 	 */
@@ -53,24 +53,12 @@ public class CartesianCoordinate implements Coordinate{
 	}
 	
 	/**
-	 * Calculates the direct distance between this coordinate object and target
-	 * @exception IllegalArgumentException: When target is null; ArithmeticException: when there is a overflow when we calculate the distance
-	 * @param target: another coordinate object
-	 * @return the direct distance
-	 */
-	public double getCartesianDistance(Coordinate other) {
-		//check parameter
-		isValidCoordinate(other);
-		
-		return doGetCartesianDistance(other.asCartesianCoordinate());
-	}
-	
-	/**
 	 * @methodetype query
 	 * @methodproperties
 	 * @return CartesianDistance between two CartesianCoordinate objects
 	 */
-	private double doGetCartesianDistance(CartesianCoordinate other) throws ArithmeticException{
+	@Override
+	protected double doGetCartesianDistance(CartesianCoordinate other) throws ArithmeticException{
 		//Build square deltas between the Coordinates parameters
 		double squareDeltaX = Math.pow(this.x - other.getX(),2);		
 		double squareDeltaY = Math.pow(this.y - other.getY(),2);
@@ -87,32 +75,6 @@ public class CartesianCoordinate implements Coordinate{
 		return Math.sqrt(squareDeltasSum);
 	}
 	
-	/**
-	 * Checks if this coordinate object is equal to other using method getDistance()
-	 * @param other: another Coordinate object
-	 * @return if they are equal true else false 
-	 */
-	public boolean isEqual(Coordinate other) {
-		if(other == null) return false;
-			
-		double distanceToOther = getCartesianDistance(other);
-		
-		return distanceToOther <= 0.000001? true : false;
-	}
-	
-	/**
-	 * Overrides and forwards equals() to isEqual
-	 */
-	@Override
-	public boolean equals(Object other) {
-	 if (other instanceof Coordinate) {
-		Coordinate otherCoordinate = (Coordinate) other;
-		return isEqual(otherCoordinate);		
-	 }
-	 
-	 return false;
-	}
-
 	@Override
 	public CartesianCoordinate asCartesianCoordinate() {
 		return this;
@@ -121,50 +83,20 @@ public class CartesianCoordinate implements Coordinate{
 	@Override
 	public SphericCoordinate asSphericCoordinate() {
 		double radius = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
-		double theta = (Math.PI / 2) - Math.atan(z / (Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))));
+		
+		//Calculates theta but if x and y are 0 then theta is set to default value zero
+		double theta = 0;
+		if(x != 0 || y != 0) {
+			theta = (Math.PI / 2) - Math.atan(z / (Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))));
+		}
+		
 		double phi = Math.atan2(y, x);
 		return new SphericCoordinate(radius, theta, phi);
 	}
-
-	/**
-	 * @methodtype query
-	 * @methodproperties composed
-	 */
-	@Override
-	public double getCentralAngle(Coordinate other) {
-		isValidCoordinate(other);
-		
-		return doGetCentralAngle(other.asSphericCoordinate());
-	}
 	
-	private double doGetCentralAngle(SphericCoordinate other) {
+	protected double doGetCentralAngle(SphericCoordinate other) {
 		SphericCoordinate selfAsSpheric = asSphericCoordinate();
 		
 		return selfAsSpheric.getCentralAngle(other);
-	}
-
-	/**
-	 * @methodtype assert
-	 * @param other: Coordinate which has to be checked from this method.
-	 * @exception throws IllegalArgumentException when other isn't valid.
-	 */
-	public void isValidCoordinate(Coordinate other) throws IllegalArgumentException {
-		if(other == null) throw new IllegalArgumentException("other have not to be null");
-	}
-	
-	/**
-	 * @methodtype assert
-	 * @param value will be checked if its a valid parameter for the Coordinate domain
-	 * @exception throws IllegalArgumentException when the value isn't valid 
-	 */
-	public void isValidDouble(double value) {	
-		if(value == Double.NaN)
-			throw new IllegalArgumentException("parameters can't be set of NaN");
-		
-		if(value == Double.POSITIVE_INFINITY)
-			throw new IllegalArgumentException("parameters can't be set on +inf");
-		
-		if(value == Double.NEGATIVE_INFINITY)
-			throw new IllegalArgumentException("parameters can't be set on -inf");
 	}
 }

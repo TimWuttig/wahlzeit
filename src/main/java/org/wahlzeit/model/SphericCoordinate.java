@@ -10,14 +10,15 @@
 
 package org.wahlzeit.model;
 
-public class SphericCoordinate implements Coordinate{
+public class SphericCoordinate extends AbstractCoordinate{
 	private double phi;
 	private double theta;
 	private double radius;
 	
 	/**
-	 * @param phi: azimuthal angle; theta: polar angle; radius: radial distance
+	 * @param phi: azimuthal angle; theta: polar angle; radius: radial distance 
 	 * @methodtype Constructor
+	 * if radius is 0 then phi and theta will be set on 0 too
 	 */
 	public SphericCoordinate(double radius, double theta, double phi) {
 		//Check parameters valid?
@@ -25,7 +26,7 @@ public class SphericCoordinate implements Coordinate{
 		isValidDouble(radius);
 		isValidDouble(phi);
 		isValidDouble(theta);		
-		
+				
 		this.radius = radius;
 		this.theta = theta;
 		this.phi = phi;
@@ -64,17 +65,8 @@ public class SphericCoordinate implements Coordinate{
 		
 		return new CartesianCoordinate(x, y, z);
 	}
-
-	@Override
-	public double getCartesianDistance(Coordinate other) {
-		//check given parameter
-		isValidCoordinate(other);
-		
-		//use doGetCartesianDistance to calculate distance
-		return doGetCartesianDistance(other.asCartesianCoordinate());		
-	}
 	
-	private double doGetCartesianDistance(CartesianCoordinate other) {
+	protected double doGetCartesianDistance(CartesianCoordinate other) {
 		//calculate cartesianCoordinate to use the getCartesianDistance() implementation form class CartesianCoordinate
 		CartesianCoordinate cartesianSelf = this.asCartesianCoordinate();
 		
@@ -91,74 +83,19 @@ public class SphericCoordinate implements Coordinate{
 	}
 
 	/**
-	 * @methodtype query
-	 * @methodproperties composed
-	 */
-	@Override
-	public double getCentralAngle(Coordinate other) {
-		isValidCoordinate(other);
-		
-		return doGetCentralAngle(other.asSphericCoordinate());
-	}
-
-	/**
 	 * calculates the central angle
 	 * @param other
-	 * @return
+	 * @return the central angle if its possible to calculate else NaN is returned
 	 */
-	private double doGetCentralAngle(SphericCoordinate other) {
+	protected double doGetCentralAngle(SphericCoordinate other) {
+		//test if radius is null then no angle exist
+		if(other.getRadius() == 0 || this.getRadius() == 0) return Double.NaN;
+		
 		double deltaTheta = this.theta - other.theta;
 		double mulSins = Math.sin(this.phi) * Math.sin(other.phi);
 		double mulCoss = Math.cos(this.phi) * Math.cos(other.phi) * Math.cos(deltaTheta);
 		double sumAll = mulSins + mulCoss;
 		
 		return Math.acos(sumAll);
-	}
-
-	@Override
-	public boolean isEqual(Coordinate other) {
-		if(other == null) return false;
-		
-		double distanceToOther = getCartesianDistance(other);
-		
-		return distanceToOther <= 0.000001? true : false;
-	}
-	
-	/**
-	 * Overrides and forwards equals() to isEqual
-	 */
-	@Override
-	public boolean equals(Object other) {
-		if (other instanceof Coordinate) {
-			Coordinate otherCoordinate = (Coordinate) other;
-			return isEqual(otherCoordinate);		
-		}
-		
-		return false;
-	}
-	
-	/**
-	 * @methodtype assert
-	 * @param other: Coordinate which has to be checked from this method.
-	 * @exception throws IllegalArgumentException when other isn't valid.
-	 */
-	public void isValidCoordinate(Coordinate other) throws IllegalArgumentException {
-		if(other == null) throw new IllegalArgumentException("other have not to be null");
-	}
-	
-	/**
-	 * @methodtype assert
-	 * @param value will be checked if its a valid parameter for the Coordinate domain
-	 * @exception throws IllegalArgumentException when the value isn't valid 
-	 */
-	public void isValidDouble(double value) {	
-		if(value == Double.NaN)
-			throw new IllegalArgumentException("parameters can't be set of NaN");
-		
-		if(value == Double.POSITIVE_INFINITY)
-			throw new IllegalArgumentException("parameters can't be set on +inf");
-		
-		if(value == Double.NEGATIVE_INFINITY)
-			throw new IllegalArgumentException("parameters can't be set on -inf");
 	}
 }
