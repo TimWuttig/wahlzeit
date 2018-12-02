@@ -55,6 +55,7 @@ public class CartesianCoordinate extends AbstractCoordinate{
 	/**
 	 * @methodetype query
 	 * @methodproperties
+	 * @param other: must not to be null
 	 * @return CartesianDistance between two CartesianCoordinate objects
 	 */
 	@Override
@@ -63,23 +64,24 @@ public class CartesianCoordinate extends AbstractCoordinate{
 		double squareDeltaX = Math.pow(this.x - other.getX(),2);		
 		double squareDeltaY = Math.pow(this.y - other.getY(),2);
 		double squareDeltaZ = Math.pow(this.z - other.getZ(),2);
-	
-		//Check of under and overflow
-		if(squareDeltaX == Double.POSITIVE_INFINITY || squareDeltaY == Double.POSITIVE_INFINITY || squareDeltaZ == Double.POSITIVE_INFINITY)
-			throw new ArithmeticException("overflow error occured by calulating the distance");
-		
-		if(squareDeltaX == Double.NEGATIVE_INFINITY || squareDeltaY == Double.NEGATIVE_INFINITY || squareDeltaZ == Double.NEGATIVE_INFINITY)
-			throw new ArithmeticException("underflow error occured by calculating the distance");
 		
 		double squareDeltasSum = squareDeltaX + squareDeltaY + squareDeltaZ;
 		return Math.sqrt(squareDeltasSum);
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see org.wahlzeit.model.AbstractCoordinate#asCartesianCoordinate()
+	 */
 	@Override
 	public CartesianCoordinate asCartesianCoordinate() {
 		return this;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.wahlzeit.model.AbstractCoordinate#asSphericCoordinate()
+	 */
 	@Override
 	public SphericCoordinate asSphericCoordinate() {
 		double radius = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
@@ -94,6 +96,11 @@ public class CartesianCoordinate extends AbstractCoordinate{
 		return new SphericCoordinate(radius, theta, phi);
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see org.wahlzeit.model.AbstractCoordinate#doGetCentralAngle(org.wahlzeit.model.SphericCoordinate)
+	 */
+	@Override
 	protected double doGetCentralAngle(SphericCoordinate other) {
 		SphericCoordinate selfAsSpheric = asSphericCoordinate();
 		

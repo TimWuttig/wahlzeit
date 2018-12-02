@@ -11,19 +11,48 @@
 package org.wahlzeit.model;
 
 public abstract class AbstractCoordinate implements Coordinate{
+	//the threshold when two coordinates are "equal".
+	protected final double acceptThreshold = 0.000001;
 	
+	/**
+	 * @methodtype conversion
+	 * @mehtodproperties primitive
+	 */
 	public abstract CartesianCoordinate asCartesianCoordinate();
+	
+	/**
+	 * @methodtype conversion
+	 * @mehtodproperties primitive
+	 */
 	public abstract SphericCoordinate asSphericCoordinate();
+	
+	/**
+	 * @methodetype query
+	 * @methodproperties
+	 * @param other: must not to be null
+	 * @return CartesianDistance between two CartesianCoordinate objects
+	 */
 	protected abstract double doGetCartesianDistance(CartesianCoordinate other);
+	
+	/**
+	 * calculates the central angle
+	 * @param other: must be not null and not the original coordinate
+	 * @return the central angle if its possible to calculate else NaN is returned
+	 */
 	protected abstract double doGetCentralAngle(SphericCoordinate other);
 	
 	@Override
 	public double getCartesianDistance(Coordinate other) {
-		//check given parameter
+		//Test preconditions
 		isValidCoordinate(other);
 		
 		//use doGetCartesianDistance to calculate distance
-		return doGetCartesianDistance(other.asCartesianCoordinate());		
+		double erg = doGetCartesianDistance(other.asCartesianCoordinate());		
+		
+		//Test postconditions
+		if(!Double.isFinite(erg)) throw new ArithmeticException("ERROR: calculated result is not finite or NaN.\n Maybe there was an overflow.");
+		
+		return erg;
 	}
 	
 	/**
@@ -32,9 +61,21 @@ public abstract class AbstractCoordinate implements Coordinate{
 	 */
 	@Override
 	public double getCentralAngle(Coordinate other) {
-		isValidCoordinate(other);
+		SphericCoordinate sphericOther = other.asSphericCoordinate();
+		SphericCoordinate sphericThis = this.asSphericCoordinate();
 		
-		return doGetCentralAngle(other.asSphericCoordinate());
+		//Test preconditions
+		isValidCoordinate(other); //test if other is null
+		if(sphericOther.getRadius() == 0 || sphericThis.getRadius() == 0) //test if radius is null then no angle exist
+					throw new IllegalArgumentException("ERROR: Can't calculate the central angle with original coordinates");
+		
+		//use doGetCentralAngle to calculate the central angle
+		double erg = doGetCentralAngle(other.asSphericCoordinate());
+		
+		//Test postconditions
+		if(!Double.isFinite(erg)) throw new ArithmeticException("ERROR: calculated result is not finite or NaN");
+		
+		return erg;
 	}
 	
 	@Override
@@ -43,7 +84,7 @@ public abstract class AbstractCoordinate implements Coordinate{
 		
 		double distanceToOther = getCartesianDistance(other);
 		
-		return distanceToOther <= 0.000001? true : false;
+		return distanceToOther <= acceptThreshold? true : false;
 	}
 	
 	/**

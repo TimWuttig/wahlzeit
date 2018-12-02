@@ -53,9 +53,9 @@ public class SphericCoordinate extends AbstractCoordinate{
 		return phi;
 	}
 	
-	/**
-	 * @methodtype conversion
-	 * @mehtodproperties primitive
+	/*
+	 * (non-Javadoc)
+	 * @see org.wahlzeit.model.AbstractCoordinate#asCartesianCoordinate()
 	 */
 	@Override
 	public CartesianCoordinate asCartesianCoordinate() {
@@ -66,6 +66,12 @@ public class SphericCoordinate extends AbstractCoordinate{
 		return new CartesianCoordinate(x, y, z);
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see org.wahlzeit.model.AbstractCoordinate#doGetCartesianDistance(org.wahlzeit.model.CartesianCoordinate)
+	 * uses the method of the CartesianCoordinate class
+	 */
+	@Override
 	protected double doGetCartesianDistance(CartesianCoordinate other) {
 		//calculate cartesianCoordinate to use the getCartesianDistance() implementation form class CartesianCoordinate
 		CartesianCoordinate cartesianSelf = this.asCartesianCoordinate();
@@ -73,24 +79,21 @@ public class SphericCoordinate extends AbstractCoordinate{
 		return cartesianSelf.getCartesianDistance(other);
 	}
 
-	/**
-	 * @methodtype conversion
-	 * @mehtodproperties primitive
+	/*
+	 * (non-Javadoc)
+	 * @see org.wahlzeit.model.AbstractCoordinate#asSphericCoordinate()
 	 */
 	@Override
 	public SphericCoordinate asSphericCoordinate() {
 		return this;
 	}
 
-	/**
-	 * calculates the central angle
-	 * @param other
-	 * @return the central angle if its possible to calculate else NaN is returned
+	/*
+	 * (non-Javadoc)
+	 * @see org.wahlzeit.model.AbstractCoordinate#doGetCentralAngle(org.wahlzeit.model.SphericCoordinate)
 	 */
+	@Override
 	protected double doGetCentralAngle(SphericCoordinate other) {
-		//test if radius is null then no angle exist
-		if(other.getRadius() == 0 || this.getRadius() == 0) return Double.NaN;
-		
 		double deltaTheta = this.theta - other.theta;
 		double mulSins = Math.sin(this.phi) * Math.sin(other.phi);
 		double mulCoss = Math.cos(this.phi) * Math.cos(other.phi) * Math.cos(deltaTheta);
