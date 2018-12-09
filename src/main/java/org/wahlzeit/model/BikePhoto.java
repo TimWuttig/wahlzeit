@@ -105,6 +105,8 @@ public class BikePhoto extends Photo{
 	 * @methodtype setter
 	 */
 	public void setModel(String model) {
+		if(model == null)throw new IllegalArgumentException("model has not to be null");
+		
 		this.model = model;
 	}
 	
@@ -112,6 +114,8 @@ public class BikePhoto extends Photo{
 	 * @methodtype setter
 	 */
 	public void setBrande(String brande) {
+		if(brande == null)throw new IllegalArgumentException("brande has not to be null");
+		
 		this.brande = brande;
 	}
 	

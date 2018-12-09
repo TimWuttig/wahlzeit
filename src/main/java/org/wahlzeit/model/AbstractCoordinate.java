@@ -42,7 +42,7 @@ public abstract class AbstractCoordinate implements Coordinate{
 	protected abstract double doGetCentralAngle(SphericCoordinate other);
 	
 	@Override
-	public double getCartesianDistance(Coordinate other) {
+	public double getCartesianDistance(Coordinate other) throws ArithmeticException {
 		//Test preconditions
 		isValidCoordinate(other);
 		
@@ -60,7 +60,7 @@ public abstract class AbstractCoordinate implements Coordinate{
 	 * @methodproperties composed
 	 */
 	@Override
-	public double getCentralAngle(Coordinate other) {
+	public double getCentralAngle(Coordinate other) throws ArithmeticException {
 		SphericCoordinate sphericOther = other.asSphericCoordinate();
 		SphericCoordinate sphericThis = this.asSphericCoordinate();
 		
@@ -81,9 +81,14 @@ public abstract class AbstractCoordinate implements Coordinate{
 	@Override
 	public boolean isEqual(Coordinate other) {
 		if(other == null) return false;
+		double distanceToOther = 0;
 		
-		double distanceToOther = getCartesianDistance(other);
-		
+		try {
+			distanceToOther = getCartesianDistance(other);
+		}catch (ArithmeticException ex) {
+			//Over/Underflow Error
+			return false;
+		}
 		return distanceToOther <= acceptThreshold? true : false;
 	}
 	
@@ -105,7 +110,7 @@ public abstract class AbstractCoordinate implements Coordinate{
 	 * @param value will be checked if its a valid parameter for the Coordinate domain
 	 * @exception throws IllegalArgumentException when the value isn't valid 
 	 */
-	public void isValidDouble(double value) {	
+	public void isValidDouble(double value) throws IllegalArgumentException {	
 		if(value == Double.NaN)
 			throw new IllegalArgumentException("parameters can't be set of NaN");
 		

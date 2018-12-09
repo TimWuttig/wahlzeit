@@ -45,6 +45,9 @@ public class BikePhotoFactory extends PhotoFactory{
 			throw new IllegalStateException("attempt to initalize PhotoFactory twice");
 		}
 
+		if (photoFactory == null)
+			throw new IllegalArgumentException("photoFactory has not to be null");
+		
 		instance = photoFactory;
 	}
 	

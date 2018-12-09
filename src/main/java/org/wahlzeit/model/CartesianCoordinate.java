@@ -59,13 +59,14 @@ public class CartesianCoordinate extends AbstractCoordinate{
 	 * @return CartesianDistance between two CartesianCoordinate objects
 	 */
 	@Override
-	protected double doGetCartesianDistance(CartesianCoordinate other) throws ArithmeticException{
+	protected double doGetCartesianDistance(CartesianCoordinate other) {
 		//Build square deltas between the Coordinates parameters
 		double squareDeltaX = Math.pow(this.x - other.getX(),2);		
 		double squareDeltaY = Math.pow(this.y - other.getY(),2);
 		double squareDeltaZ = Math.pow(this.z - other.getZ(),2);
 		
 		double squareDeltasSum = squareDeltaX + squareDeltaY + squareDeltaZ;
+		
 		return Math.sqrt(squareDeltasSum);
 	}
 	
