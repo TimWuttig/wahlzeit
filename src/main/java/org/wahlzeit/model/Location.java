@@ -22,7 +22,7 @@ public class Location {
 	 * because variable coordinate must be initialized
 	 */
 	public Location(double x, double y, double z) {
-		coordinate = new CartesianCoordinate(x,y,z);
+		coordinate = CartesianCoordinate.get(x,y,z);
 	}
 	
 	/**

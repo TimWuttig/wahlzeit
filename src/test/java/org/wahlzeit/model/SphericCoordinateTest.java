@@ -39,15 +39,41 @@ public class SphericCoordinateTest {
 	 */
 	@Before
 	public void startup() {
-		maxValueSphericCoordinate = new SphericCoordinate(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-		minValueSphericCoordinate = new SphericCoordinate(0, Double.MIN_VALUE, Double.MIN_VALUE);
-		positiveSphericCoordinate = new SphericCoordinate(6.634003316	, 1.168078459 , 0.6107259644);
-		negativeSphericCoordinate = new SphericCoordinate(7.412152184, 1.914826624, -2.69717345);
-		mixedSphericCoordinate = new SphericCoordinate(10.55888252, 0.5503090856, -0.9526521009);
-		equalPositiveSphericCoordinate = new SphericCoordinate(6.634003316	, 1.168078459 , 0.6107259644);
-		equalMixedSphericCoordinate = new SphericCoordinate(10.55888252, 0.5503090856, -0.9526521009);
-		equalPositiveCartesianCoordinate = new CartesianCoordinate(5.0, 3.5, 2.6);
-		equalMixedCartesianCoordinate = new CartesianCoordinate(3.2, -4.5, 9);
+		maxValueSphericCoordinate = SphericCoordinate.get(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+		minValueSphericCoordinate = SphericCoordinate.get(0, Double.MIN_VALUE, Double.MIN_VALUE);
+		positiveSphericCoordinate = SphericCoordinate.get(6.634003316	, 1.168078459 , 0.6107259644);
+		negativeSphericCoordinate = SphericCoordinate.get(7.412152184, 1.914826624, -2.69717345);
+		mixedSphericCoordinate = SphericCoordinate.get(10.55888252, 0.5503090856, -0.9526521009);
+		equalPositiveSphericCoordinate = SphericCoordinate.get(6.634003316	, 1.168078459 , 0.6107259644);
+		equalMixedSphericCoordinate = SphericCoordinate.get(10.55888252, 0.5503090856, -0.9526521009);
+		equalPositiveCartesianCoordinate = CartesianCoordinate.get(5.0, 3.5, 2.6);
+		equalMixedCartesianCoordinate = CartesianCoordinate.get(3.2, -4.5, 9);
+	}
+	
+	@Test
+	public void testClone() {
+		Object clonePositive = positiveSphericCoordinate.clone();
+		Object cloneNegative = negativeSphericCoordinate.clone();
+		Object cloneMixed = mixedSphericCoordinate.clone();
+		
+		assertTrue(clonePositive == positiveSphericCoordinate);
+		assertTrue(cloneNegative == negativeSphericCoordinate);
+		assertTrue(cloneMixed == mixedSphericCoordinate);
+	}
+	
+	@Test
+	public void testGet() {
+		SphericCoordinate testMaxValueSphericCoordinate = SphericCoordinate.get(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+		SphericCoordinate testMinValueSphericCoordinate = SphericCoordinate.get(0, Double.MIN_VALUE, Double.MIN_VALUE);
+		SphericCoordinate testPositiveSphericCoordinate = SphericCoordinate.get(6.634003316	, 1.168078459 , 0.6107259644);
+		SphericCoordinate testNegativeSphericCoordinate = SphericCoordinate.get(7.412152184, 1.914826624, -2.69717345);
+		SphericCoordinate testMixedSphericCoordinate = SphericCoordinate.get(10.55888252, 0.5503090856, -0.9526521009);
+
+		assertTrue(maxValueSphericCoordinate == testMaxValueSphericCoordinate);
+		assertTrue(minValueSphericCoordinate == testMinValueSphericCoordinate);
+		assertTrue(positiveSphericCoordinate == testPositiveSphericCoordinate);
+		assertTrue(negativeSphericCoordinate == testNegativeSphericCoordinate);
+		assertTrue(mixedSphericCoordinate == testMixedSphericCoordinate);
 	}
 	
 	/**
@@ -117,9 +143,6 @@ public class SphericCoordinateTest {
 		assertFalse(positiveSphericCoordinate.isEqual(equalMixedSphericCoordinate));
 		
 		//Test with SphericCoordinate as other
-		assertTrue(positiveSphericCoordinate.isEqual(equalPositiveCartesianCoordinate));
-		assertTrue(mixedSphericCoordinate.isEqual(equalMixedCartesianCoordinate));		
-		
 		assertFalse(positiveSphericCoordinate.isEqual(equalMixedCartesianCoordinate));
 		assertFalse(mixedSphericCoordinate.isEqual(equalPositiveCartesianCoordinate));
 		
@@ -138,10 +161,7 @@ public class SphericCoordinateTest {
 		
 		assertFalse(positiveSphericCoordinate.equals(equalMixedSphericCoordinate));
 			
-		//Test with SphericCoordinate as other
-		assertTrue(positiveSphericCoordinate.equals(equalPositiveCartesianCoordinate));
-		assertTrue(mixedSphericCoordinate.equals(equalMixedCartesianCoordinate));		
-			
+		//Test with SphericCoordinate as other			
 		assertFalse(positiveSphericCoordinate.equals(equalMixedCartesianCoordinate));
 		assertFalse(mixedSphericCoordinate.equals(equalPositiveCartesianCoordinate));
 			

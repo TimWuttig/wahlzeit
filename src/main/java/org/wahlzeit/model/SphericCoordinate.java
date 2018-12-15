@@ -10,7 +10,12 @@
 
 package org.wahlzeit.model;
 
+import java.util.HashMap;
+import java.util.Objects;
+
 public class SphericCoordinate extends AbstractCoordinate{
+	private static HashMap<Integer, SphericCoordinate> instances = new HashMap<Integer, SphericCoordinate>();
+	
 	private double phi;
 	private double theta;
 	private double radius;
@@ -20,13 +25,7 @@ public class SphericCoordinate extends AbstractCoordinate{
 	 * @methodtype Constructor
 	 * if radius is 0 then phi and theta will be set on 0 too
 	 */
-	public SphericCoordinate(double radius, double theta, double phi) {
-		//Check parameters valid?
-		if(radius < 0)throw new IllegalArgumentException("radius must be positive");
-		isValidDouble(radius);
-		isValidDouble(phi);
-		isValidDouble(theta);		
-				
+	private SphericCoordinate(double radius, double theta, double phi) {
 		this.radius = radius;
 		this.theta = theta;
 		this.phi = phi;
@@ -53,6 +52,34 @@ public class SphericCoordinate extends AbstractCoordinate{
 		return phi;
 	}
 	
+	public static SphericCoordinate get(double radius, double theta, double phi) throws IllegalArgumentException {
+		//Check parameters valid?
+		if(radius < 0)throw new IllegalArgumentException("radius must be positive");
+		isValidDouble(radius);
+		isValidDouble(phi);
+		isValidDouble(theta);
+		
+		SphericCoordinate result = doGet(radius, theta, phi);
+		
+		isValidCoordinate(result);
+		
+		return result;
+	}
+	
+	private static SphericCoordinate doGet(double radius, double theta, double phi) {
+		int key = Objects.hash(radius, phi, theta);
+		
+		if(!instances.containsKey(key))
+			instances.put(key, new SphericCoordinate(radius, theta, phi));
+		
+		return instances.get(key);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getRadius(), getPhi(), getTheta());
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see org.wahlzeit.model.AbstractCoordinate#asCartesianCoordinate()
@@ -63,7 +90,7 @@ public class SphericCoordinate extends AbstractCoordinate{
 		double y = radius * Math.sin(theta) * Math.sin(phi);
 		double z = radius * Math.cos(theta);
 		
-		return new CartesianCoordinate(x, y, z);
+		return CartesianCoordinate.get(x, y, z);
 	}
 	
 	/*

@@ -10,6 +10,8 @@
 
 package org.wahlzeit.model;
 
+import java.util.Objects;
+
 public abstract class AbstractCoordinate implements Coordinate{
 	//the threshold when two coordinates are "equal".
 	protected final double acceptThreshold = 0.000001;
@@ -28,7 +30,7 @@ public abstract class AbstractCoordinate implements Coordinate{
 	
 	/**
 	 * @methodetype query
-	 * @methodproperties
+	 * @methodproperties primitive
 	 * @param other: must not to be null
 	 * @return CartesianDistance between two CartesianCoordinate objects
 	 */
@@ -42,7 +44,10 @@ public abstract class AbstractCoordinate implements Coordinate{
 	protected abstract double doGetCentralAngle(SphericCoordinate other);
 	
 	@Override
-	public double getCartesianDistance(Coordinate other) throws ArithmeticException {
+	public abstract int hashCode();
+	
+	@Override
+	public double getCartesianDistance(Coordinate other) throws ArithmeticException, IllegalArgumentException {
 		//Test preconditions
 		isValidCoordinate(other);
 		
@@ -60,7 +65,7 @@ public abstract class AbstractCoordinate implements Coordinate{
 	 * @methodproperties composed
 	 */
 	@Override
-	public double getCentralAngle(Coordinate other) throws ArithmeticException {
+	public double getCentralAngle(Coordinate other) throws ArithmeticException, IllegalArgumentException {
 		SphericCoordinate sphericOther = other.asSphericCoordinate();
 		SphericCoordinate sphericThis = this.asSphericCoordinate();
 		
@@ -78,6 +83,10 @@ public abstract class AbstractCoordinate implements Coordinate{
 		return erg;
 	}
 	
+	/**
+	 * tests if other coordinate is semantically equal.
+	 * Coordinates are semantically equal if the cartesianDistance is less than the specific accept-threshold
+	 */
 	@Override
 	public boolean isEqual(Coordinate other) {
 		if(other == null) return false;
@@ -97,12 +106,7 @@ public abstract class AbstractCoordinate implements Coordinate{
 	 */
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof Coordinate) {
-			Coordinate otherCoordinate = (Coordinate) other;
-			return isEqual(otherCoordinate);		
-		}
-		
-		return false;
+		return this == other;
 	}
 	
 	/**
@@ -110,7 +114,7 @@ public abstract class AbstractCoordinate implements Coordinate{
 	 * @param value will be checked if its a valid parameter for the Coordinate domain
 	 * @exception throws IllegalArgumentException when the value isn't valid 
 	 */
-	public void isValidDouble(double value) throws IllegalArgumentException {	
+	public static void isValidDouble(double value) throws IllegalArgumentException {	
 		if(value == Double.NaN)
 			throw new IllegalArgumentException("parameters can't be set of NaN");
 		
@@ -126,7 +130,15 @@ public abstract class AbstractCoordinate implements Coordinate{
 	 * @param other: Coordinate which has to be checked from this method.
 	 * @exception throws IllegalArgumentException when other isn't valid.
 	 */
-	public void isValidCoordinate(Coordinate other) throws IllegalArgumentException {
+	public static void isValidCoordinate(Coordinate other) throws IllegalArgumentException {
 		if(other == null) throw new IllegalArgumentException("other have not to be null");
+	}
+	
+	/**
+	 * Override clone() method to get only on object for each instance
+	 */
+	@Override
+	public Object clone() {
+		return this;
 	}
 }

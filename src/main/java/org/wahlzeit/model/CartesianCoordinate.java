@@ -10,6 +10,8 @@
 
 package org.wahlzeit.model;
 
+import java.util.HashMap;
+import java.util.Objects;
 
 public class CartesianCoordinate extends AbstractCoordinate{
 	/**
@@ -18,6 +20,7 @@ public class CartesianCoordinate extends AbstractCoordinate{
 	private double x;
 	private double y;
 	private double z;
+	private static HashMap<Integer, CartesianCoordinate> instances = new HashMap<Integer, CartesianCoordinate>();
 	
 	/**
 	 * Constructor sets the attributes x,y,z on the specific values
@@ -25,10 +28,49 @@ public class CartesianCoordinate extends AbstractCoordinate{
 	 * @param y stands for the y-Coordinate
 	 * @param z stands for the z-Coordinate
 	 */
-	public CartesianCoordinate(double x, double y, double z) {
+	private CartesianCoordinate(double x, double y, double z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
+	}
+	
+	/**
+	 * When CartesianCoordinate already exists, this will be returned. 
+	 * If it not exists a new CartesianCoordinate will be inserted into instances and will be returned as result 
+	 * @param x stands for the x-Coordinate
+	 * @param y stands for the y-Coordinate
+	 * @param z stands for the z-Coordinate
+	 */
+	public static CartesianCoordinate get(double x, double y, double z) throws IllegalArgumentException{
+		isValidDouble(x);
+		isValidDouble(y);
+		isValidDouble(z);
+		
+		
+		CartesianCoordinate result = doGet(x, y, z);
+		
+		isValidCoordinate(result);
+		
+		return result;
+	}
+	
+	/**
+	 * @methodtype helper
+	 * @methodproperties primitive
+	 * @param key: a array specifying the x,y,z-value of the CartesianCoordinate
+	 * @return the CartesianCoordinate with the specific key values
+	 */
+	private static CartesianCoordinate doGet(double x, double y, double z) {
+		int key = Objects.hash(x, y, z);
+		
+		if(!instances.containsKey(key)) 
+			instances.put(key, new CartesianCoordinate(x, y, z));
+		return instances.get(key);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(getX(), getY(), getZ());
 	}
 	
 	/**
@@ -94,7 +136,7 @@ public class CartesianCoordinate extends AbstractCoordinate{
 		}
 		
 		double phi = Math.atan2(y, x);
-		return new SphericCoordinate(radius, theta, phi);
+		return SphericCoordinate.get(radius, theta, phi);
 	}
 	
 	/*
