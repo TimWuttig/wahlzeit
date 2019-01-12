@@ -14,6 +14,13 @@ import org.wahlzeit.services.LogBuilder;
 
 import java.util.logging.Logger;;
 
+@PatternInstance(
+		patterName = "Factory Method",
+		participants = {
+				"PhotoFactory",
+				"BikePhotoFactory"
+		}
+)
 public class BikePhotoFactory extends PhotoFactory{
 	
 	private static final Logger log = Logger.getLogger(BikePhotoFactory.class.getName()); 

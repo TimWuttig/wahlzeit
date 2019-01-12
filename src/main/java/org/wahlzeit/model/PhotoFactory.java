@@ -27,6 +27,14 @@ import java.util.logging.Logger;
 /**
  * An Abstract Factory for creating photos and related objects.
  */
+@PatternInstance(
+		patterName = "Abstract Factory",
+		participants = {
+				"PhotoFactory",
+				"BikePhotoFactory"
+		}
+)
+
 public class PhotoFactory {
 
 	private static final Logger log = Logger.getLogger(PhotoFactory.class.getName());

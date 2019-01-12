@@ -12,6 +12,14 @@ package org.wahlzeit.model;
 
 import java.util.Objects;
 
+@PatternInstance(
+		patterName = "Chain of Responsibility",
+		participants = {
+				"AbstractCoordinate",
+				"SphericCoordinate",
+				"CartesianCoordinate"
+		}
+)
 public abstract class AbstractCoordinate implements Coordinate{
 	//the threshold when two coordinates are "equal".
 	protected final double acceptThreshold = 0.000001;
@@ -64,6 +72,14 @@ public abstract class AbstractCoordinate implements Coordinate{
 	 * @methodtype query
 	 * @methodproperties composed
 	 */
+	@PatternInstance(
+			patterName = "Template Method",
+			participants = {
+					"AbstractCoordinate",
+					"SphericCoordinate",
+					"CartesianCoordinate"
+			}
+	)
 	@Override
 	public double getCentralAngle(Coordinate other) throws ArithmeticException, IllegalArgumentException {
 		SphericCoordinate sphericOther = other.asSphericCoordinate();

@@ -69,9 +69,10 @@ public class PhotoManager extends ObjectManager {
 		photoTagCollector = PhotoFactory.getInstance().createPhotoTagCollector();
 	}
 
-	/**
-	 *
-	 */
+	@PatternInstance(
+			patterName = "Singelton",
+			participants = {}
+	)
 	public static final PhotoManager getInstance() {
 		return instance;
 	}
