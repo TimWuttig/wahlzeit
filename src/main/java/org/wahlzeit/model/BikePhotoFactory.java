@@ -76,15 +76,15 @@ public class BikePhotoFactory extends PhotoFactory{
 	/**
 	 * @methodtype factory
 	 */
-	public Photo createPhoto(String model, String brande, int horsepower) {
-		return new BikePhoto(model, brande, horsepower);
+	public Photo createPhoto(String typename, String model, String brande, int horsepower) {
+		return new BikePhoto(typename, model, brande, horsepower);
 	}
 	
 	/**
 	 * Creates new bikephoto with specific id
 	 * @methodtype factory
 	 */
-	public Photo createPhoto(PhotoId id, String model, String brande, int horsepower) {
-		return new BikePhoto(id, model, brande, horsepower);
+	public Photo createPhoto(PhotoId id, String typename, String model, String brande, int horsepower) {
+		return new BikePhoto(id, typename, model, brande, horsepower);
 	}
 }

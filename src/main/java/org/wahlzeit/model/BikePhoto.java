@@ -18,6 +18,7 @@ public class BikePhoto extends Photo{
 	/*
 	 * Default values for domain attributes	
 	 */
+	private static final BikeType DEFAULT_TYPE = BikeType.getInstance("default");
 	private static final String DEFAULT_MODEL = "Pretty cool Motorcycle";
 	private static final String DEFAULT_BRANDE = "Bambusbikes Inc.";
 	private static final int DEFAULT_HORSEPOWER = 199;
@@ -25,10 +26,7 @@ public class BikePhoto extends Photo{
 	/*
 	 * Attributes for my domain
 	 */	
-	private String model;
-	private String brande;
-	private int horsepower;
-	
+	private Bike bike;
 	protected PhotoId id = null;
 	
 	/**
@@ -38,7 +36,7 @@ public class BikePhoto extends Photo{
 		id = PhotoId.getNextId();
 		incWriteCount();
 		
-		setAttr(DEFAULT_MODEL,DEFAULT_BRANDE,DEFAULT_HORSEPOWER);
+		init(DEFAULT_TYPE, DEFAULT_MODEL,DEFAULT_BRANDE,DEFAULT_HORSEPOWER);
 	}
 	
 	/**
@@ -49,82 +47,44 @@ public class BikePhoto extends Photo{
 
 		incWriteCount();
 		
-		setAttr(DEFAULT_MODEL,DEFAULT_BRANDE,DEFAULT_HORSEPOWER);
+		init(DEFAULT_TYPE, DEFAULT_MODEL,DEFAULT_BRANDE,DEFAULT_HORSEPOWER);
 	}
 	
 	/**
 	 * @methodtype constructor
 	 */
-	public BikePhoto(String model, String brande, int horsepower) {
+	public BikePhoto(String typename, String model, String brande, int horsepower) {
 		BikePhoto createdBikePhoto = new BikePhoto();
 		
-		setAttr(model,brande,horsepower);
+		init(BikeType.getInstance(typename), model,brande,horsepower);
 	}
 	
 	/**
 	 * @methodtype constructor
 	 */
-	public BikePhoto(PhotoId myId, String model, String brande, int horsepower) {
+	public BikePhoto(PhotoId myId, String typename, String model, String brande, int horsepower) {
 		BikePhoto createdBikePhoto = new BikePhoto(myId);
 		
-		setAttr(model,brande,horsepower);
+		createdBikePhoto.init(BikeType.getInstance(typename), model,brande,horsepower);
 	}
 	
 	/**
 	 * @methodtype initializer
 	 * @methodproperties composed
+	 * @exception IllegalArgumentException
 	 */
-	public void setAttr(String model, String brande, int horsepower) {
-		setModel(model);
-		setBrande(brande);
-		setHorsepower(horsepower);
-	}
-	
-	/**
-	 * @methodtype getter
-	 */
-	public String getModel() {
-		return model;
-	}
-	
-	/**
-	 * @methodtype getter
-	 */
-	public String getBrande() {
-		return brande;
-	}
-	
-	/**
-	 * @methodtype getter
-	 */
-	public int getHorsepower() {
-		return horsepower;
-	}
-	
-	/**
-	 * @methodtype setter
-	 */
-	public void setModel(String model) {
-		if(model == null)throw new IllegalArgumentException("model has not to be null");
+	public void init(BikeType type, String model, String brande, int horsepower) throws IllegalArgumentException{
+		bike = new Bike(type, model, brande, horsepower);
 		
-		this.model = model;
+		BikeManager manager = BikeManager.getInstance();
+		manager.addBike(bike);
+		manager.addBikeType(type);
 	}
 	
 	/**
-	 * @methodtype setter
+	 * @methodtype getter
 	 */
-	public void setBrande(String brande) {
-		if(brande == null)throw new IllegalArgumentException("brande has not to be null");
-		
-		this.brande = brande;
-	}
-	
-	/**
-	 * @methodtype setter
-	 * @exception throws IllegalArgumentexception if parameter is negative
-	 */
-	public void setHorsepower(int horsepower) {
-		if(horsepower < 0)throw new IllegalArgumentException("horsepower must be positive to make sense");
-		this.horsepower = horsepower;
+	public Bike getBike() {
+		return this.bike;
 	}
 }
