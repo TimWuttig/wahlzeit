@@ -11,14 +11,14 @@
 package org.wahlzeit.model;
 
 import org.wahlzeit.services.LogBuilder;
+import org.wahlzeit.utils.PatternInstance;
 
 import java.util.logging.Logger;;
 
 @PatternInstance(
-		patterName = "Factory Method",
+		patternName = "Factory Method",
 		participants = {
-				"PhotoFactory",
-				"BikePhotoFactory"
+				"Subclass"
 		}
 )
 public class BikePhotoFactory extends PhotoFactory{
